@@ -13,7 +13,7 @@ Do stworzenia projektu wykorzystałem:
 
 <ul>
   <li>
-    Podstawowe przeglądanie wszystkich produktów
+    Podstawowe przeglądanie wszystkich produktów<br>
     <code>GET /products</code><br>
     Dozwolone jest:
     <ul>
@@ -28,7 +28,7 @@ Do stworzenia projektu wykorzystałem:
     <code>GET /products{product_id}</code>
   </li>
   <li>
-    Dodawanie produktów
+    Dodawanie produktów<br>
     <code>POST /products</code><br>
     body:
     <pre>
@@ -43,12 +43,12 @@ Do stworzenia projektu wykorzystałem:
     W przypadku dodania produktu, który już istnieje (taka sama nazwa) to wtedy podana przez nas ilość dodawana jest do już istniejącej.
   </li>
   <li>
-    Modyfikowanie produktów
+    Modyfikowanie produktów<br>
     <code>PATCH /products/{product_id}</code><br>
     W body jest to samo co przy dodawaniu, z tym że wszystkie pola są opcjonalne
   </li>
   <li>
-    Usuwanie produktów
+    Usuwanie produktów<br>
     <code>DELETE /products/{product_id}</code><br>
     Powoduje usunięcie produktu z bazy, nie zmniejsza jego ilości
   </li>
