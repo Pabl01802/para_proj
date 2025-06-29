@@ -49,11 +49,24 @@ Do stworzenia projektu wykorzystałem:
   </li>
 </ul>
 
+Przed uruchomieniem aplikacji: 
+<ul>
+  <li>
+    należy pobrać zależności zapisane w pliku requirements.txt: <br>
+    <code>pip install -r requirements.txt</code>
+  </li>
+  <li>
+    Stworzyć bazę <code>products</code> w PostgreSQL
+  </li>
+  <li>
+    W pliku alembic.ini zmienić url bazy: <br>
+    <code>sqlalchemy.url = postgresql+psycopg2://<user>:<password>@localhost/products</code>
+  </li>
+  <li>
+    Zaaplikować wszystkie migracje: <br>
+    <code>alembic upgrade head</code>
+  </li>
+</ul>
+
 Uruchomienie aplikacji: <br>
 <code>launch api: uvicorn app.main:app --reload</code> <br>
-
-Stworzenie migracji: <br>
-<code>create migration: alembic revision --autogenerate -m "migration_description"</code> <br>
-
-Zaaplikowanie migracji: <br>
-<code>apply migrations: alembic upgrade head</code>
