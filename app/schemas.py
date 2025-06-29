@@ -1,4 +1,5 @@
-from pydantic import BaseModel, Field
+from fastapi_pagination import Params
+from pydantic import BaseModel, Field, field_validator
 from enum import Enum
 from typing import Annotated
 
@@ -23,3 +24,6 @@ class ProductPatch(BaseModel):
   category: CategoryEnum | None = None
   manufacturer: ManufacturerEnum | None = None
   price: Annotated[float, Field(gt=0)] | None = None
+
+class ProductsSearchQueries(Params):
+  size: int = 20

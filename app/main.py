@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from . import models
 from .database import engine, SessionLocal
 from . import schemas
+from fastapi_pagination import Page, Params, add_pagination
+from fastapi_pagination.ext.sqlalchemy import paginate
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -15,9 +17,14 @@ def get_db():
   finally:
     db.close()
 
-@app.get("/products", response_model=list[schemas.Product])
-def get_products(db: Session = Depends(get_db)):
-  return db.query(models.Product).all()
+@app.get("/products", response_model=Page[schemas.Product])
+def get_products(params: schemas.ProductsSearchQueries = Depends(), db: Session = Depends(get_db)):
+  if  params.model_dump()["size"] not in [20, 30, 40]:
+    raise HTTPException(status_code=422, detail="Size must be one of: 20, 30 or 40")
+
+  return paginate(db, db.query(models.Product), params)
+
+add_pagination(app)
 
 @app.get("/products/{product_id}", response_model=schemas.Product)
 def get_product(product_id: int, db: Session = Depends(get_db)):
