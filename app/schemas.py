@@ -12,7 +12,7 @@ class CategoryEnum(str, Enum):
   WHEELS = 'Wheels'
 
 
-class ProductCreate(BaseModel):
+class Product(BaseModel):
   name: Annotated[str, Field(min_length=3, max_length=30)]
   category: CategoryEnum
   manufacturer: ManufacturerEnum
