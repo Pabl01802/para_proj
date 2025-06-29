@@ -21,25 +21,33 @@ def get_db():
 @app.get("/products", response_model=Page[schemas.Product])
 def get_products(
   params: schemas.ProductsSearchQueries = Depends(), 
-  sort_by: Optional[str] = Query("name"), 
+  sort_by: Optional[str] = Query(None), 
   sort_order: Optional[str] = Query("asc"),
   db: Session = Depends(get_db)
   ):
-  if  params.model_dump()["size"] not in [20, 30, 40]:
+
+  if params.model_dump()["size"] not in [20, 30, 40]:
     raise HTTPException(status_code=422, detail="Size must be one of: 20, 30 or 40")
   
-  allowed_sort_fields = {"name", "price"}
+  query = db.query(models.Product)
 
-  if sort_by not in allowed_sort_fields:
-    raise HTTPException(status_code=422, detail="Sort must be one of following: name or price")
+  if sort_by:
+
+    allowed_sort_fields = ["name", "price"]
+    sort_orders = ["asc", "desc"]
+
+    if sort_by not in allowed_sort_fields:
+      raise HTTPException(status_code=422, detail="Sort must be one of following: name or price")
+    
+    if sort_order not in sort_orders:
+      raise HTTPException(status_code=422, detail="Sort order must be either asc or desc")
   
-  sort_column = getattr(models.Product, sort_by)
-  if sort_order == "desc":
-    sort_column = sort_column.desc()
-  else:
-    sort_column = sort_column.asc()
-
-  query = db.query(models.Product).order_by(sort_column)
+    sort_column = getattr(models.Product, sort_by)
+    if sort_order == "desc":
+      sort_column = sort_column.desc()
+    else:
+      sort_column = sort_column.asc()
+    query = db.query(models.Product).order_by(sort_column)
 
   return paginate(db, query, params)
 
