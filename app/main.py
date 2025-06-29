@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from . import models
 from .database import engine, SessionLocal
 from . import schemas
-from fastapi_pagination import Page, Params, add_pagination
+from fastapi_pagination import Page, add_pagination
 from fastapi_pagination.ext.sqlalchemy import paginate
 
 models.Base.metadata.create_all(bind=engine)
