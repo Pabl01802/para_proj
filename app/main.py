@@ -21,6 +21,7 @@ def get_db():
 @app.get("/products", response_model=Page[schemas.Product])
 def get_products(
   params: schemas.ProductsSearchQueries = Depends(), 
+  manufacturer: Optional[str] = Query(None),
   sort_by: Optional[str] = Query(None), 
   sort_order: Optional[str] = Query("asc"),
   db: Session = Depends(get_db)
@@ -30,6 +31,9 @@ def get_products(
     raise HTTPException(status_code=422, detail="Size must be one of: 20, 30 or 40")
   
   query = db.query(models.Product)
+
+  if manufacturer:
+    query = query.filter(models.Product.manufacturer == manufacturer)
 
   if sort_by:
 
