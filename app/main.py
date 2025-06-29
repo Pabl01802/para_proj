@@ -48,3 +48,18 @@ def delete_product(product_id: int):
     session.commit()
 
   return 
+
+@app.patch("/products/{product_id}", response_model=schemas.Product)
+def modify_product(product_id: int, patch_data: schemas.ProductPatch, db: Session = Depends(get_db)):
+  product = db.query(models.Product).filter(models.Product.id == product_id).first()
+  if not product:
+    raise HTTPException(status_code=404, detail="Product not found")
+
+  update_data = patch_data.model_dump(exclude_unset=True)
+  for key, value in update_data.items():
+    setattr(product, key, value)
+
+  db.add(product)
+  db.commit()
+  db.refresh(product)
+  return product
