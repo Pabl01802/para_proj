@@ -24,7 +24,7 @@ Do stworzenia projektu wykorzystałem:
     <code>GET /products?size=30&sort_by=quantity&sort_order=desc&manufacturer=SIMAGIC&page=2</code>
   </li>
   <li>
-    Przeglądanie jednego produktu
+    Przeglądanie jednego produktu <br>
     <code>GET /products{product_id}</code>
   </li>
   <li>
