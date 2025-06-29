@@ -18,6 +18,7 @@ class Product(BaseModel):
   category: CategoryEnum
   manufacturer: ManufacturerEnum
   price: Annotated[float, Field(gt=0)]
+  quantity: Annotated[int, Field(gt=0)]
 
 class ProductPatch(BaseModel):
   name: Annotated[str, Field(min_length=3, max_length=30)] | None = None

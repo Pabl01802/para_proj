@@ -9,3 +9,4 @@ class Product(Base):
   category = Column(String)
   manufacturer = Column(String)
   price = Column(Float)
+  quantity = Column(Integer, default=1)

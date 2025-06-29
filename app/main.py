@@ -67,13 +67,22 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
 @app.post("/products", status_code=201)
 def add_product(product: schemas.Product, db: Session = Depends(get_db)):
 
+  found = db.query(models.Product).filter(models.Product.name == product.name).first()
+
+  if found:
+    if product.quantity is not None:
+      found.quantity = (found.quantity or 0) + product.quantity
+      db.commit()
+      db.refresh(found)
+    return found
+
   db_product = models.Product(**product.model_dump())
   db.add(db_product)
   db.commit()
   db.refresh(db_product)
 
   return {
-    "message": "Product created"
+    "message": "Product added"
   }
 
 @app.delete("/products/{product_id}", status_code=204)
