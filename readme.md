@@ -1,6 +1,7 @@
 ## Bardzo proste API stworzone do przeglądania, dodawania, usuwania i modyfikowania produktów simracingowych.
 
 Do stworzenia projektu wykorzystałem:
+
 <ul>
   <li>FastAPI (Python)</li>
   <li>SQLAlchemy jako ORM</li>
@@ -21,6 +22,10 @@ Do stworzenia projektu wykorzystałem:
       <li>Wybranie strony (paginacja) oraz ilości produktów na stronie (domyślnie tylko 20, poza 20 dozwolone tylko 30 lub 40)</li>
     </ul>
     <code>GET /products?size=30&sort_by=quantity&sort_order=desc&manufacturer=SIMAGIC&page=2</code>
+  </li>
+  <li>
+    Przeglądanie jednego produktu
+    <code>GET /products{product_id}</code>
   </li>
   <li>
     Dodawanie produktów
@@ -49,7 +54,8 @@ Do stworzenia projektu wykorzystałem:
   </li>
 </ul>
 
-Przed uruchomieniem aplikacji: 
+Przed uruchomieniem aplikacji:
+
 <ul>
   <li>
     należy pobrać zależności zapisane w pliku requirements.txt: <br>
