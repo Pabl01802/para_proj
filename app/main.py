@@ -41,7 +41,8 @@ def get_products(
     sort_orders = ["asc", "desc"]
 
     if sort_by not in allowed_sort_fields:
-      raise HTTPException(status_code=422, detail="Sort must be one of following: name, price or quantity")
+
+      raise HTTPException(status_code=422, detail=f"Sort must be one of following: {', '.join(allowed_sort_fields)}")
     
     if sort_order not in sort_orders:
       raise HTTPException(status_code=422, detail="Sort order must be either asc or desc")
