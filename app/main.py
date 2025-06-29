@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from . import models
 from .database import engine, SessionLocal
@@ -20,7 +20,7 @@ def read_products(db: Session = Depends(get_db)):
   return db.query(models.Product).all()
 
 @app.post("/products", status_code=201)
-def add_products(product: schemas.ProductCreate, db: Session = Depends(get_db)):
+def add_product(product: schemas.ProductCreate, db: Session = Depends(get_db)):
 
   db_product = models.Product(**product.model_dump())
   db.add(db_product)
@@ -28,5 +28,16 @@ def add_products(product: schemas.ProductCreate, db: Session = Depends(get_db)):
   db.refresh(db_product)
 
   return {
-    "message": "created"
+    "message": "Product created"
   }
+
+@app.delete("/products/{product_id}", status_code=204)
+def delete_product(product_id: int):
+  with Session(engine) as session:
+    product = session.get(models.Product, product_id)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    session.delete(product)
+    session.commit()
+
+  return 
