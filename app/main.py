@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Depends, HTTPException
+from typing import Optional
+from fastapi import FastAPI, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from . import models
 from .database import engine, SessionLocal
@@ -18,11 +19,29 @@ def get_db():
     db.close()
 
 @app.get("/products", response_model=Page[schemas.Product])
-def get_products(params: schemas.ProductsSearchQueries = Depends(), db: Session = Depends(get_db)):
+def get_products(
+  params: schemas.ProductsSearchQueries = Depends(), 
+  sort_by: Optional[str] = Query("name"), 
+  sort_order: Optional[str] = Query("asc"),
+  db: Session = Depends(get_db)
+  ):
   if  params.model_dump()["size"] not in [20, 30, 40]:
     raise HTTPException(status_code=422, detail="Size must be one of: 20, 30 or 40")
+  
+  allowed_sort_fields = {"name", "price"}
 
-  return paginate(db, db.query(models.Product), params)
+  if sort_by not in allowed_sort_fields:
+    raise HTTPException(status_code=422, detail="Sort must be one of following: name or price")
+  
+  sort_column = getattr(models.Product, sort_by)
+  if sort_order == "desc":
+    sort_column = sort_column.desc()
+  else:
+    sort_column = sort_column.asc()
+
+  query = db.query(models.Product).order_by(sort_column)
+
+  return paginate(db, query, params)
 
 add_pagination(app)
 
